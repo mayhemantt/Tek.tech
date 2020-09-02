@@ -1,5 +1,5 @@
 import {useState} from 'react'
-
+import {signup} from '../../actions/auth'
 
 const SignupComponent=()=>{
 
@@ -17,8 +17,31 @@ const SignupComponent=()=>{
 
     const handleSubmit=(e)=>{
         e.preventDefault()
-        console.table({name,email,password,error,loading,message,showForm})
+        // console.table({name,email,password,error,loading,message,showForm})
+
+        setValues({...values, loading:true, error:false})
+        const user= {name, email,password}
+
+        signup(user)
+        .then(data=>{
+            if(data.error){
+                 setValues({...values, error:data.error, loading:false})
+            }
+            else{
+                setValues({...values, name:'', email:'', password:'',error:'',loading:false, message:data.message, showForm:false})
+            }
+        })
     }
+
+    const showLoading=()=>(
+        loading ? <div className="alert alert-info">Loading...</div>:''
+    )
+    const showError=()=>(
+        error ? <div className="alert alert-danger">{error}</div>:''
+    )
+    const showMessage=()=>(
+        message ? <div className="alert alert-info">{message}</div>:''
+    )
 
     const handleChange=(name)=>e=>{
         setValues({...values, error:false,[name]:e.target.value})
@@ -45,7 +68,10 @@ const SignupComponent=()=>{
 
     return(
         <React.Fragment>
-            {signupForm()}
+            {showError()}
+            {showLoading()}
+            {showMessage()}
+            {showForm && signupForm()}
         </React.Fragment>
     )
 }

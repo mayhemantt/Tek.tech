@@ -51,7 +51,11 @@ const Header = () => {
               </DropdownMenu>
             </UncontrolledDropdown> */}
           </Nav>
-          <NavbarText>Simple Text</NavbarText>
+          <NavbarText>
+            <Link href="/about">
+              <a>About</a>
+            </Link>
+          </NavbarText>
         </Collapse>
       </Navbar>
     </div>
