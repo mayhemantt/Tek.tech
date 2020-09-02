@@ -14,6 +14,8 @@ import {
   NavbarText
 } from 'reactstrap';
 import {APP_NAME} from '../config'
+import Link from 'next/link'
+
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,31 +25,29 @@ const Header = () => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">{APP_NAME}</NavbarBrand>
+        <Link href="/">
+           <NavLink className="font-weight-bold">{APP_NAME}</NavLink>
+        </Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink href="/components/">Components</NavLink>
+                <Link href="/signin">
+                <NavLink>Sigin</NavLink>
+                </Link>
             </NavItem>
             <NavItem>
-              <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+                <Link href="/signup">
+                <NavLink>Signup</NavLink>
+                </Link>
             </NavItem>
             {/* <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                Options
-              </DropdownToggle>
+              <DropdownToggle nav caret> Options </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>
-                  Option 1
-                </DropdownItem>
-                <DropdownItem>
-                  Option 2
-                </DropdownItem>
+                <DropdownItem> Option 1</DropdownItem>
+                <DropdownItem>Option 2</DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem>
-                  Reset
-                </DropdownItem>
+                <DropdownItem>Reset</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown> */}
           </Nav>
