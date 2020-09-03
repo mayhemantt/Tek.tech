@@ -17,6 +17,11 @@ import Router from 'next/router'
 import {APP_NAME} from '../config'
 import Link from 'next/link'
 import {signout, isAuth} from '../actions/auth'
+import NProgress from 'nprogress'
+
+Router.onRouteChangeStart=url=> NProgress.start()
+Router.onRouterChangeComplete= url => NProgress.done()
+Router.onRouterChangeError=url=> NProgress.done()
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +51,7 @@ const Header = () => {
             </NavItem>
               </React.Fragment>
             }
+            
             {
             isAuth() && isAuth().role===0 &&(
               <NavItem>
@@ -58,7 +64,7 @@ const Header = () => {
             )
             }
 
-            {
+{
             isAuth() && isAuth().role===1 && (
               <NavItem>
                 <Link href="/admin">  
@@ -69,13 +75,15 @@ const Header = () => {
               </NavItem>
             )
             }
-            {
+
+{
             isAuth() && (
               <NavItem>
               <NavLink style={{cursor:'pointer'}} onClick={()=>signout(()=> Router.replace(`/signin`))}>Signout</NavLink>
               </NavItem>
             )
             }
+
 
             </Nav>
           {/* <NavbarText>
