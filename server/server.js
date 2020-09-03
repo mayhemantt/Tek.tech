@@ -29,6 +29,8 @@ const mongoose=require('mongoose')
 
 const blogRoutes= require('./routes/blog')
 const authRoutes= require('./routes/auth')
+const userRoutes= require('./routes/user')
+
 // app
 const app=express()
  
@@ -59,7 +61,7 @@ if(process.env.NODE_ENV=== 'development'){
 app.use(cors())
 
 // routes
-
+app.use('/api', userRoutes)
 app.use('/api',blogRoutes)
 app.use('/api',authRoutes)
 

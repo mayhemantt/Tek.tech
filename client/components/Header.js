@@ -13,9 +13,10 @@ import {
   DropdownItem,
   NavbarText
 } from 'reactstrap';
+import Router from 'next/router'
 import {APP_NAME} from '../config'
 import Link from 'next/link'
-
+import {signout, isAuth} from '../actions/auth'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,24 +32,34 @@ const Header = () => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            <NavItem>
+
+            {!isAuth()&& <React.Fragment>
+              <NavItem>
                 <Link href="/signin">
-                <NavLink>Sigin</NavLink>
+                <NavLink style={{cursor:'pointer'}}>Sigin</NavLink>
                 </Link>
             </NavItem>
             <NavItem>
                 <Link href="/signup">
-                <NavLink>Signup</NavLink>
+                <NavLink style={{cursor:'pointer'}}>Signup</NavLink>
                 </Link>
             </NavItem>
-            {/* <UncontrolledDropdown nav inNavbar><DropdownToggle nav caret> Options </DropdownToggle>
-              <DropdownMenu right><DropdownItem> Option 1</DropdownItem><DropdownItem>Option 2</DropdownItem><DropdownItem divider /><DropdownItem>Reset</DropdownItem></DropdownMenu></UncontrolledDropdown> */}
-          </Nav>
-          <NavbarText>
+              </React.Fragment>
+            }
+            {
+            isAuth() && (
+              <NavItem>
+              <NavLink style={{cursor:'pointer'}} onClick={()=>signout(()=> Router.replace(`/signin`))}>Signout</NavLink>
+              </NavItem>
+            )
+            }
+
+            </Nav>
+          {/* <NavbarText>
             <Link href="/about">
               <a>About</a>
             </Link>
-          </NavbarText>
+          </NavbarText> */}
         </Collapse>
       </Navbar>
     </div>
