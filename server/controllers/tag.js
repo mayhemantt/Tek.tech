@@ -1,4 +1,4 @@
-const Category= require('../models/category')
+const Tag= require('../models/tag')
 const slugify= require('slugify')
 const {errorHandler}= require('../helpers/dbErrorHandler')
 
@@ -6,9 +6,9 @@ exports.create=(req,res)=>{
     const {name}= req.body
     let slug=slugify(name).toLowerCase()
 
-    let category= new Category({name, slug})
+    let tag= new Tag({name, slug})
 
-    category.save((err, data)=>{
+    tag.save((err, data)=>{
         if(err){
             return res.status(400).json({
                 error: errorHandler(err)
@@ -21,7 +21,7 @@ exports.create=(req,res)=>{
 
 
 exports.list=(req,res)=>{
-    Category.find({}).exec((err, data)=>{
+    Tag.find({}).exec((err, data)=>{
         if(err){
             return res.status(400).json({
                 error: errorHandler(err)
@@ -35,27 +35,27 @@ exports.list=(req,res)=>{
 exports.read=(req,res)=>{
     const slug= req.params.slug.toLowerCase()
 
-    Category.findOne({slug}).exec((err, category)=>{
+    Tag.findOne({slug}).exec((err, tag)=>{
         if(err){
             return res.status(400).json({
                 error: errorHandler(err)
             })
         }
-        res.json(category) 
+        res.json(tag) 
     })
 }
 
 exports.remove=(req,res)=>{
     const slug= req.params.slug.toLowerCase()
 
-    Category.findOneAndRemove({slug}).exec((err, data)=>{
+    Tag.findOneAndRemove({slug}).exec((err, data)=>{
         if(err){
             return res.status(400).json({
                 error: errorHandler(err)
             })
         }
         res.json({
-            message:' Category Deleted Successfully'
+            message:' Tag Deleted Successfully'
         }) 
     })
 }
