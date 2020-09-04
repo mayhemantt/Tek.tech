@@ -17,8 +17,32 @@ exports.create = (req, res) => {
                 error: 'Image could not upload'
             });
         }
-
+        
         const { title, body, categories, tags } = fields;
+        if(!title || !title.length){
+            return res.status(400).json({
+                error: 'Title is Required'
+            });
+        }
+
+        if(!body || body.length <200){
+            return res.status(400).json({
+                error: 'Content is too short'
+            });
+        }
+
+        if(!categories || categories.length ===0){
+            return res.status(400).json({
+                error: 'At least one Char is req'
+            });
+        }
+
+        if(!tags || tags.length ===0){
+            return res.status(400).json({
+                error: 'At least one tag is req'
+            });
+        }
+
 
         let blog = new Blog();
         blog.title = title;
@@ -33,7 +57,7 @@ exports.create = (req, res) => {
             if (files.photo.size > 1000000000) {
                 return res.status(400).json({
                     error: 'Image should be less then 1mb in size'
-                });
+                })
             }
             blog.photo.data = fs.readFileSync(files.photo.path);
             blog.photo.contentType = files.photo.type;
