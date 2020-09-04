@@ -1,9 +1,9 @@
 const express= require('express')
 const router=express.Router()
+const {create}=require('../controllers/blog')
+const {requireSignin, authMiddleware, adminMiddleware}= require('../controllers/auth')
 
 
-router.get('/',(req, res)=>{
-    res.json({time: Date().toString()})
-})
+router.post('/blog',requireSignin,adminMiddleware, create)
 
 module.exports= router
