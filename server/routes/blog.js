@@ -1,9 +1,9 @@
-const express= require('express')
-const router=express.Router()
-const {create}=require('../controllers/blog')
-const {requireSignin, authMiddleware, adminMiddleware}= require('../controllers/auth')
+const express = require('express');
+const router = express.Router();
+const { create } = require('../controllers/blog');
 
+const { requireSignin, adminMiddleware } = require('../controllers/auth');
 
-router.post('/blog',requireSignin,adminMiddleware, create)
+router.post('/blog', requireSignin,adminMiddleware, create);
 
-module.exports= router
+module.exports = router;
