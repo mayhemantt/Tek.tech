@@ -36,11 +36,16 @@ const CreateBlog=({router})=>{
     const[checked, setChecked]= useState([])
     const[checkedTag, setCheckedTag]= useState([])
     
+
+    const handleToggle=(c)=>{
+        setValues({...values, error: ''})
+        
+    }
     const showCategories=()=>{
         return (
             categories && categories.map((c,ic)=>(
                 <li className="list-unstyled" key={ic}>
-                    <input type="checkbox" className="mr-2"/>
+                    <input onChange={handleToggle(c._id)} type="checkbox" className="mr-2"/>
                     <label className="form-check-label">{c.name}</label>
                 </li>
             ))
