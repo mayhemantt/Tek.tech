@@ -54,6 +54,25 @@ const CreateBlog=({router})=>{
         formData.set('categories', all)
 
     }
+
+    const handleTagsToggle=(t)=>()=>{
+        setValues({...values, error: ''})
+        const clickedTag= checkedTag.indexOf(t)
+        const all =[...checkedTag]
+
+        if(clickedTag=== -1){
+            all.push(t)
+        }else{
+            all.splice(clickedTag, 1)
+        }
+
+        console.log(all)
+        setCheckedTag(all)
+
+        formData.set('tags', all)
+
+    }
+
     const showCategories=()=>{
         return (
             categories && categories.map((c,ic)=>(
@@ -69,7 +88,7 @@ const CreateBlog=({router})=>{
         return (
             tags && tags.map((t,it)=>(
                 <li className="list-unstyled" key={it}>
-                    <input type="checkbox" className="mr-2"/>
+                    <input onChange={handleTagsToggle(t._id)} type="checkbox" className="mr-2"/>
                     <label className="form-check-label">{t.name}</label>
                 </li>
             ))
