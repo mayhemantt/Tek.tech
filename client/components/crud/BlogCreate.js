@@ -136,7 +136,7 @@ const CreateBlog=({router})=>{
         // console.log(e.target.value)
         const value= name === 'photo'? e.target.files[0] : e.target.value
         formData.set(name, value)
-        setValues({...values, [name]: value, formData, error:''})
+        setValues({...values, [name]: value, formData,})
 
     }
     const publishBlog=(e)=>{
@@ -155,6 +155,7 @@ const CreateBlog=({router})=>{
 
     const handleBody=e=>{
         // console.log(e)
+        // setValues({...values, success:false, error:''})
         setBody(e)
         formData.set('body', e)
         if(typeof window !== undefined){
@@ -162,10 +163,22 @@ const CreateBlog=({router})=>{
         }
     }
 
+    const showError=()=>(
+        <div className="alert alert-danger" style={{display: error? '': 'none'}}>
+        {error}
+        </div>
+    )
+
+    const showSuccess=()=>(
+        <div className="alert alert-success" style={{display: success? '': 'none'}}>
+        {success}
+        </div>
+    )
+
 
     const createBlogForm=()=>{
         return(
-            <form onSubmit={publishBlog} style={{marginBottom:'100px'}}>
+            <form onSubmit={publishBlog} >
                 <div className="form-group" >
                     <label className="text-muted">Title</label>
                     <input type="text" className="form-control" value={title} onChange={handleChange('title')}/>
@@ -181,10 +194,15 @@ const CreateBlog=({router})=>{
     }
 
 
-    return  <div className="container-fluid">
+    return  <div className="container-fluid pb-5">
                 <div className="row">
-                   <div className="col-md-8">
+                   <div className="col-md-8" style={{marginBottom:'100px'}} > 
+                        {showSuccess()}
                         {createBlogForm()}
+                        <div className="pt-3">
+                            {showError()}
+                        </div>
+                        
                     </div> 
                     <div className="col-md-4">
                         <div className='form-group pb-2'>
