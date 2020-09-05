@@ -165,8 +165,8 @@ const CreateBlog=({router})=>{
 
     const createBlogForm=()=>{
         return(
-            <form onSubmit={publishBlog}>
-                <div className="form-group">
+            <form onSubmit={publishBlog} style={{marginBottom:'100px'}}>
+                <div className="form-group" >
                     <label className="text-muted">Title</label>
                     <input type="text" className="form-control" value={title} onChange={handleChange('title')}/>
                 </div>
@@ -174,7 +174,7 @@ const CreateBlog=({router})=>{
                     <ReactQuill modules={CreateBlog.modules} formats={CreateBlog.formats} value={body} placeholder="Hii," onChange={handleBody}/>
                 </div>
                 <div>
-                    <button className="btn btn-primary" type="submit">Publish</button>
+                    <button className="btn btn-primary"  type="submit">Publish</button>
                 </div>
             </form>
         )

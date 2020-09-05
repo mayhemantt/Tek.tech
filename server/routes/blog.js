@@ -4,6 +4,8 @@ const { create } = require('../controllers/blog');
 
 const { requireSignin, adminMiddleware } = require('../controllers/auth');
 
-router.post('/blog', requireSignin,adminMiddleware, create);
+router.post('/blog', requireSignin, adminMiddleware, create);
+router.get('/blogs', list);
+router.get('/blogs', list);
 
 module.exports = router;
