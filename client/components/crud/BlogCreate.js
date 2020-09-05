@@ -9,7 +9,11 @@ import {getTags } from '../../actions/tags'
 import {createBlog} from '../../actions/blog'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
+
+
 const CreateBlog=({router})=>{
+
+    const token =getCookie('token')
 
     const blogFromLS=()=>{
         if(typeof window === 'undefined'){
@@ -137,7 +141,16 @@ const CreateBlog=({router})=>{
     }
     const publishBlog=(e)=>{
         e.preventDefault()
-        console.log('Ready to Publish')
+        createBlog(formData,token ).then(data=>{
+            if(data.error){
+                setValues({...values, error:data.error})
+            }else{
+                setValues({...values, title:' ', error:'', success: `"${data.title}" is created` })
+                setBody('')
+                setCategories([])
+                setTags([])
+            }
+        })
     }
 
     const handleBody=e=>{
@@ -174,6 +187,16 @@ const CreateBlog=({router})=>{
                         {createBlogForm()}
                     </div> 
                     <div className="col-md-4">
+                        <div className='form-group pb-2'>
+                            <h5>
+                                Featured Image
+                            </h5>
+                            <hr />
+                            <small className="text-muted">Max Size: 1mb</small>
+                            <label className="btn btn-outline-info">Upload Featured Image
+                            <input onChange={handleChange('photo')} type="file" accept="image/*" hidden />
+                            </label>
+                        </div>
                         <div >
                             <h5>
                                 Categories
