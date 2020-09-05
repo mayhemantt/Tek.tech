@@ -10,6 +10,8 @@ import {createBlog} from '../../actions/blog'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
 
+
+
 const CreateBlog=({router})=>{
 
     const blogFromLS=()=>{
@@ -85,6 +87,7 @@ const CreateBlog=({router})=>{
 }
 
 CreateBlog.modules={
+
     toolbar:[
         [{header:'1'},{header:'2'}, {header: [3,4,5,6]},{font:[]}],
         [{size: []}],
@@ -95,8 +98,9 @@ CreateBlog.modules={
         ['code-block']
     ]
 }
+
 CreateBlog.formats=[
-    'header', 
+    'header',
     'font',
     'size',
     'bold',
