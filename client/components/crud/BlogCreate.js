@@ -22,6 +22,8 @@ const CreateBlog=({router})=>{
         }
     }
 
+
+
     const [body, setBody]=useState(blogFromLS())
     const [values, setValues]=useState({
         error:'',
@@ -31,7 +33,9 @@ const CreateBlog=({router})=>{
         title: '',
         hidePublishButton: false
     })
-
+    const[checked, setChecked]= useState([])
+    const[checkedTag, setCheckedTag]= useState([])
+    
     const showCategories=()=>{
         return (
             categories && categories.map((c,ic)=>(
