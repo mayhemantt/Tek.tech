@@ -9,7 +9,7 @@ import {getTags } from '../../actions/tags'
 import {createBlog} from '../../actions/blog'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
-
+import {QuillModules,QuillFormats} from '../../helpers/quill'
 
 const CreateBlog=({router})=>{
 
@@ -184,7 +184,7 @@ const CreateBlog=({router})=>{
                     <input type="text" className="form-control" value={title} onChange={handleChange('title')}/>
                 </div>
                 <div className="form-group">
-                    <ReactQuill modules={CreateBlog.modules} formats={CreateBlog.formats} value={body} placeholder="Hii," onChange={handleBody}/>
+                    <ReactQuill modules={QuillModules} formats={QuillFormats} value={body} placeholder="Hii," onChange={handleBody}/>
                 </div>
                 <div>
                     <button className="btn btn-primary"  type="submit">Publish</button>
@@ -210,7 +210,7 @@ const CreateBlog=({router})=>{
                                 Featured Image
                             </h5>
                             <hr />
-                            <small className="text-muted">Max Size: 1mb</small>
+                            <small className="text-muted mr-2">Max Size: 1mb</small>
                             <label className="btn btn-outline-info">Upload Featured Image
                             <input onChange={handleChange('photo')} type="file" accept="image/*" hidden />
                             </label>
@@ -239,34 +239,5 @@ const CreateBlog=({router})=>{
             </div>
 }
 
-CreateBlog.modules={
-
-    toolbar:[
-        [{header:'1'},{header:'2'}, {header: [3,4,5,6]},{font:[]}],
-        [{size: []}],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link', 'image', 'video'],
-        ['clean'],
-        ['code-block']
-    ]
-}
-
-CreateBlog.formats=[
-    'header',
-    'font',
-    'size',
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'blockquote',
-    'list',
-    'bullet',
-    'link',
-    'image',
-    'video',
-    'code-block'
-]
 
 export default withRouter(CreateBlog)

@@ -183,7 +183,17 @@ exports.read=(req,res)=>{
 }
 
 exports.remove=(req,res)=>{
-    
+    const slug= req.params.slug.toLowerCase()
+    Blog.findOneAndRemove({slug}).exec((err, data)=>{
+        if(err){
+            return res.json({
+                error: errorHandler(err)
+            })
+        }
+        res.json({
+            message:' Deleted Successfully'
+        })
+    })
 }
 
 exports.update=(req,res)=>{
