@@ -7,7 +7,7 @@ const stripHtml = require('string-strip-html');
 const _ = require('lodash');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const fs = require('fs');
-
+const {smartTrim}= require('../helpers/blog')
 exports.create = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -47,11 +47,14 @@ exports.create = (req, res) => {
         let blog = new Blog();
         blog.title = title;
         blog.body = body;
+        blog.excerpt = smartTrim(body, 320, ' ', ' ...')
         blog.slug = slugify(title).toLowerCase();
         blog.mtitle = `${title} | ${process.env.APP_NAME}`;
-        console.log(stripHtml(body).result)
         blog.mdesc= stripHtml(body).result.substring(0,100)
         blog.postedBy = req.user._id;
+        // categories and tags
+        let arrayOfCategories= categories && categories.split(',')
+        let arrayOfTags= tags && tags.split(',')
 
         if (files.photo) {
             if (files.photo.size > 1000000000) {
@@ -69,8 +72,25 @@ exports.create = (req, res) => {
                     error : err
                 });
             }
-            res.json(result);
-        }
-        );
+            // res.json(result);
+            Blog.findByIdAndUpdate(result._id,{$push:{categories: arrayOfCategories}},{new: true}).exec((err, result)=>{
+                if(err){
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    })
+                }
+                else{
+                    Blog.findByIdAndUpdate(result._id, {$push: {tags: arrayOfTags}},{new: true}).exec((err, result)=>{
+                        if(err){
+                            return res.status(400).json({
+                                error: errorHandler(err)
+                            })  
+                        }else{
+                            res.json(result)
+                        }
+                    })
+                }
+            })
+        });
     });
 };
