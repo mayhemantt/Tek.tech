@@ -9,9 +9,6 @@ import {getTags } from '../../actions/tags'
 import {createBlog} from '../../actions/blog'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
-
-
-
 const CreateBlog=({router})=>{
 
     const blogFromLS=()=>{
@@ -35,10 +32,59 @@ const CreateBlog=({router})=>{
         hidePublishButton: false
     })
 
+    const showCategories=()=>{
+        return (
+            categories && categories.map((c,ic)=>(
+                <li className="list-unstyled" key={ic}>
+                    <input type="checkbox" className="mr-2"/>
+                    <label className="form-check-label">{c.name}</label>
+                </li>
+            ))
+        )
+    }
+
+    const showTags=()=>{
+        return (
+            tags && tags.map((t,it)=>(
+                <li className="list-unstyled" key={it}>
+                    <input type="checkbox" className="mr-2"/>
+                    <label className="form-check-label">{t.name}</label>
+                </li>
+            ))
+        )
+    }
+
+    const [categories, setCategories] = useState([])
+    const [tags, setTags] = useState([])
+
+
     const {error, sizeError, success, formData, title, hidePublishButton}= values
+
+    const initCategories=()=>{
+        getCategories().then(data=>{
+            if(data.error){
+                setValues({...values, error: data.error})
+            }else{
+                setCategories(data)
+            }
+        })
+
+    }
+
+    const initTags=()=>{
+        getTags().then(data=>{
+            if(data.error){
+                setValues({...values, error: data.error})
+            }else{
+                setTags(data)
+            }
+        })
+    }
 
     useEffect(()=>{
         setValues({...values, formData: new FormData()})
+        initCategories()
+        initTags()
     },[router])
 
     const handleChange= name=>e=>{
@@ -81,8 +127,33 @@ const CreateBlog=({router})=>{
     }
 
 
-    return  <div>
-                {createBlogForm()}
+    return  <div className="container-fluid">
+                <div className="row">
+                   <div className="col-md-8">
+                        {createBlogForm()}
+                    </div> 
+                    <div className="col-md-4">
+                        <div >
+                            <h5>
+                                Categories
+                            </h5>
+                            <hr />
+                            <ul style={{maxHeight:'150px', overflowY: 'scroll'}}>
+                               {showCategories()}  
+                            </ul>
+                        </div>
+                        <hr />
+                        <div >
+                            <h5>
+                                Tags
+                            </h5>
+                            <hr />
+                            <ul style={{maxHeight:'150px', overflowY: 'scroll'}}>
+                                {showTags()}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 }
 
