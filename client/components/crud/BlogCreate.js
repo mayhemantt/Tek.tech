@@ -37,9 +37,22 @@ const CreateBlog=({router})=>{
     const[checkedTag, setCheckedTag]= useState([])
     
 
-    const handleToggle=(c)=>{
+    const handleToggle=(c)=>()=>{
         setValues({...values, error: ''})
-        
+        const clickedCategory= checked.indexOf(c)
+        const all =[...checked]
+
+        if(clickedCategory=== -1){
+            all.push(c)
+        }else{
+            all.splice(clickedCategory, 1)
+        }
+
+        console.log(all)
+        setChecked(all)
+
+        formData.set('categories', all)
+
     }
     const showCategories=()=>{
         return (
