@@ -38,6 +38,13 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
 
+           <React.Fragment>
+              <NavItem>
+                <Link href="/blogs">
+                <NavLink style={{cursor:'pointer'}}>Blogs</NavLink>
+                </Link>
+            </NavItem>
+              </React.Fragment>
             {!isAuth()&& <React.Fragment>
               <NavItem>
                 <Link href="/signin">
