@@ -39,7 +39,10 @@ Blogs.getInitialProps=()=>{
             console.log(data.error)
         }else{
             return {
-                blogs: data.blogs, categories: data.categories, tags: data.tags, size : data.size
+                blogs: data.blogs,
+                categories: data.categories, 
+                tags: data.tags, 
+                size : data.size
             }
         }
     })
