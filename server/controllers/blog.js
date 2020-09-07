@@ -8,6 +8,8 @@ const _ = require('lodash');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const fs = require('fs');
 const {smartTrim}= require('../helpers/blog')
+
+
 exports.create = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -17,7 +19,6 @@ exports.create = (req, res) => {
                 error: 'Image could not upload'
             });
         }
-        
         const { title, body, categories, tags } = fields;
         if(!title || !title.length){
             return res.status(400).json({
@@ -42,7 +43,6 @@ exports.create = (req, res) => {
                 error: 'At least one tag is req'
             });
         }
-
 
         let blog = new Blog();
         blog.title = title;
@@ -94,6 +94,7 @@ exports.create = (req, res) => {
         });
     });
 };
+
 
 
 // list, listAllBlogsCategoriesTags, read, remove, update
@@ -196,6 +197,76 @@ exports.remove=(req,res)=>{
     })
 }
 
-exports.update=(req,res)=>{
+
+
+exports.update = (req, res) => {
+    const slug= req.params.slug.toLowerCase()
+
+    Blog.findOne({slug}).exec((err, oldBlog)=>{
+        if (err) {
+            return res.status(400).json({
+                error: errorHandler(err)
+            });
+        }
+
+        let form = new formidable.IncomingForm()
+        form.keepExtensions= true
+
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Image could not upload'
+                });
+            }
+
+            let slugBeforeMerge= oldBlog.slug
+
+            oldBlog= _.merge(oldBlog, fields)
+            oldBlog.slug= slugBeforeMerge
+
+            const {body, desc, categories, tags}= fields
+
+            if(body){
+                oldBlog.excerpt= smartTrim(body, 320, ' ', ' ...')
+                oldBlog.mdesc =stripHtml(body).result.substring(0,100)
+            }
+
+            if(categories){
+                oldBlog.categories= categories.split(',')
+            }
+
+            if(tags){
+                oldBlog.tags= tags.split(',')
+            }
     
-}
+            if (files.photo) {
+                if (files.photo.size > 1000000000) {
+                    return res.status(400).json({
+                        error: 'Image should be less then 1mb in size'
+                    })
+                }
+                oldBlog.photo.data = fs.readFileSync(files.photo.path);
+                oldBlog.photo.contentType = files.photo.type;
+            }
+            oldBlog.save(
+                (err, result) => {
+                if (err) {
+                    return res.status(400).json({
+                        error : err
+                    });
+                }
+
+                Blog.findByIdAndUpdate(result._id,{$push:{categories: arrayOfCategories}},{new: true}).exec((err, result)=>{
+                    if(err){
+                        return res.status(400).json({
+                            error: errorHandler(err)
+                        })
+                    }
+                    res.json(result)
+                })
+            });
+        });
+
+    })
+
+};
