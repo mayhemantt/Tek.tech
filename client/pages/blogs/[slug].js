@@ -7,6 +7,7 @@ import {API, DOMAIN, APP_NAME} from '../../config'
 import moment from 'moment'
 import renderHTML from 'react-render-html'
 import SmallCard from '../../components/blog/SmallCard'
+
 const SingleBlog=({blog, query})=>{
 
 
@@ -111,6 +112,9 @@ const SingleBlog=({blog, query})=>{
                         <h4 className="text-center pt-5 pb-5 h2">
                             Related Blogs
                         </h4>
+                        <div className="row">
+                            {showRelatedBlog()}
+                        </div>
                         <hr />
 
                     </div>
