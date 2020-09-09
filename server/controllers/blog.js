@@ -295,8 +295,6 @@ exports.listRelated =(req,res)=>{
 
     const {_id, categories}= req.body.blog
 
-    console.log(_id)
-
     Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
     .limit (limit)
     .populate('postedBy', '_id name profile')
