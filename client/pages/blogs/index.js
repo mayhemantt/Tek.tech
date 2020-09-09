@@ -49,7 +49,7 @@ const Blogs=({blogs, categories, tags, totalBlogs, blogsLimit, blogSkip, router}
 
     const loadMoreButton =()=>{
         return(
-            size > 0 && size >= limit && (<button onClick={loadMore} className="btn btn-primary btn-lg">Load More</button>)
+            size > 0 && size >= limit && (<button onClick={loadMore} className="btn btn-outline-primary btn-lg">Load More</button>)
         )
     }
 
