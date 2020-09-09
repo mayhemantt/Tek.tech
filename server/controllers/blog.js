@@ -7,7 +7,8 @@ const stripHtml = require('string-strip-html');
 const _ = require('lodash');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const fs = require('fs');
-const {smartTrim}= require('../helpers/blog')
+const {smartTrim}= require('../helpers/blog');
+const { identity } = require('lodash');
 
 
 exports.create = (req, res) => {
@@ -286,5 +287,24 @@ exports.photo=(req,res)=>{
 
         res.set('Content-Type',blog.photo.contentType)
         return res.send(blog.photo.data)
+    })
+}
+
+exports.listRelated =(req,res)=>{
+    let limit = req.body.limit ? parseInt( req.body.limit ): 3
+
+    const {_identity, categories}= req.body
+
+    Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
+    .limit (limit)
+    .populate('postedBy', '_id name profile')
+    .select('title slug excerpt postedBy createdAt updatedAt')
+    .exec((err, blogs)=>{
+        if(err){
+            return res.status(400).json({
+                error: 'Blogs Not Found'
+            })
+            res.json(blogs)
+        }
     })
 }
