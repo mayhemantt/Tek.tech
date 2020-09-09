@@ -1,13 +1,29 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Layout from '../../components/Layout'
-import {useState} from 'react'
-import {singleBlog} from '../../actions/blog'
+import {useState, useEffect} from 'react'
+import {singleBlog, listRelated} from '../../actions/blog'
 import {API, DOMAIN, APP_NAME} from '../../config'
 import moment from 'moment'
 import renderHTML from 'react-render-html'
-
+import SmallCard from '../../components/blog/SmallCard'
 const SingleBlog=({blog, query})=>{
+
+
+    const [related , setRelated]= useState([])
+    const loadRelated=()=>{
+            listRelated({blog}).then(data=>{
+                if(data.error){
+                    console.log(data.error)
+                }else{
+                setRelated(data)
+            }
+            })
+        }
+
+    useEffect(() => {
+        loadRelated()
+    }, [])
 
 
     const head=()=>{
@@ -49,6 +65,16 @@ const SingleBlog=({blog, query})=>{
             </Link>
         ));
 
+        const showRelatedBlog=()=>{
+            return related.map((blog,i)=>{
+                return <div className="col-md-4" key={i}>
+                    <article>
+                        <SmallCard blog={blog}/>
+                    </article>
+                </div>
+            })
+        }
+
     return <React.Fragment>
         {head()}
         <Layout>
@@ -87,7 +113,6 @@ const SingleBlog=({blog, query})=>{
                         </h4>
                         <hr />
 
-                        <p>Show Related Blogs</p>
                     </div>
 
                     <div className="container pb-5">

@@ -293,7 +293,9 @@ exports.photo=(req,res)=>{
 exports.listRelated =(req,res)=>{
     let limit = req.body.limit ? parseInt( req.body.limit ): 3
 
-    const {_identity, categories}= req.body
+    const {_id, categories}= req.body.blog
+
+    console.log(_id)
 
     Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
     .limit (limit)
@@ -303,8 +305,8 @@ exports.listRelated =(req,res)=>{
         if(err){
             return res.status(400).json({
                 error: 'Blogs Not Found'
-            })
-            res.json(blogs)
+            }) 
         }
+        res.json(blogs)
     })
 }
