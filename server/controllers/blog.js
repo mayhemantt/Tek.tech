@@ -250,23 +250,13 @@ exports.update = (req, res) => {
                 oldBlog.photo.data = fs.readFileSync(files.photo.path);
                 oldBlog.photo.contentType = files.photo.type;
             }
-            oldBlog.save(
-                (err, result) => {
+            oldBlog.save((err, result) => {
                 if (err) {
                     return res.status(400).json({
                         error : err
                     });
                 }
-
-                Blog.findByIdAndUpdate(result._id,{$push:{categories: arrayOfCategories}},{new: true}).exec((err, result)=>{
-                    if(err){
-                        return res.status(400).json({
-                            error: errorHandler(err)
-                        })
-                    }
-                    // result.photo= undefined
                     res.json(result)
-                })
             });
         });
 

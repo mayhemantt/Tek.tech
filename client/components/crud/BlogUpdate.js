@@ -6,40 +6,112 @@ import {withRouter} from 'next/router'
 import {getCookie, isAuth} from '../../actions/auth'
 import {getCategories } from '../../actions/category'
 import {getTags } from '../../actions/tags'
-import {createBlog} from '../../actions/blog'
+import {singleBlog, updateBlog} from '../../actions/blog'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
 import {QuillModules,QuillFormats} from '../../helpers/quill'
 
-const CreateBlog=({router})=>{
 
-    const token =getCookie('token')
+const BlogUpdate = ({router}) => {
 
-    const blogFromLS=()=>{
-        if(typeof window === 'undefined'){
-            return false
-        }
-        if(localStorage.getItem('blog')){
-            return JSON.parse(localStorage.getItem('blog'))
-        } else{
-            return false
-        }
-    }
+    const [body, setBody]= useState({})
+
+    const[checked, setChecked]= useState([])
+    const[checkedTag, setCheckedTag]= useState([])
+    const [categories, setCategories] = useState([])
+    const [tags, setTags] = useState([])
 
 
-
-    const [body, setBody]=useState(blogFromLS())
     const [values, setValues]=useState({
         error:'',
-        sizeError:'',
         success:'',
         formData:'',
         title: '',
-        hidePublishButton: false
     })
-    const[checked, setChecked]= useState([])
-    const[checkedTag, setCheckedTag]= useState([])
+    const {error, success, formData, title}= values
+
+    const token = getCookie('token')
     
+    useEffect(()=>{
+        setValues({...values, formData: new FormData()})
+        initBlog()
+        initCategories()
+        initTags()
+    },[router])
+
+    const initBlog=()=>{
+        if(router.query.slug){
+            singleBlog(router.query.slug).then(data2=>{
+                if(data2.error){
+                    console.log(data2.error)
+                }else{
+                    setValues({...values, title: data2.title})
+                    setBody(data2.body)
+                    setCategoriesArray(data2.categories)
+                    setTagsArray(data2.tags)
+                }
+            })
+        }
+    }
+
+    const setCategoriesArray= blogCategories=>{
+        let cat =[]
+        blogCategories.map((c,i)=>{
+            cat.push(c._id)
+        })
+        setChecked(cat)
+    }
+
+    const setTagsArray= blogTags=>{
+        let ta =[]
+        blogTags.map((t,i)=>{
+            ta.push(t._id)
+        })
+        setCheckedTag(ta)
+    }
+
+    const initCategories=()=>{
+        getCategories().then(data1=>{
+            if(data1.error){
+                setValues({...values, error: data1.error})
+            }else{
+                setCategories(data1)
+            }
+        })
+
+    }
+
+    const initTags=()=>{
+        getTags().then(data=>{
+            if(data.error){
+                setValues({...values, error: data.error})
+            }else{
+                setTags(data)
+            }
+        })
+    }
+
+    const handleBody=e=>{
+        setBody(e)
+        formData.set('body', e)
+    }
+
+    const editBlog=(e)=>{
+        e.preventDefault()
+        updateBlog(formData, token, router.query.slug).then(data=>{
+            if(data.error){
+                setValues({...values, error:data.error})
+            }else{
+                setValues({...values, title: '', success: `Blog Title "${data.title}" has been updated`})
+                if(isAuth() && isAuth.role===1){
+                    Router.replace(`/admin/crud/${router.query.slug}`)
+                }else if(isAuth() && isAuth.role===0){
+                    Router.replace(`/user/crud/${router.query.slug}`)
+                }
+            }
+        })
+    }
+
 
     const handleToggle=(c)=>()=>{
         setValues({...values, error: ''})
@@ -75,13 +147,32 @@ const CreateBlog=({router})=>{
 
         formData.set('tags', all)
 
+
+    }
+
+    const findOutCategory=c=>{
+        const result = checked.indexOf(c)
+        if(result !== -1){
+            return true
+        }else{
+            return false
+        }
+    }
+
+    const findOutTag=t=>{
+        const result = checkedTag.indexOf(t)
+        if(result !== -1){
+           return true
+        }else{
+            return false
+        }
     }
 
     const showCategories=()=>{
         return (
             categories && categories.map((c,ic)=>(
                 <li className="list-unstyled" key={ic}>
-                    <input onChange={handleToggle(c._id)} type="checkbox" className="mr-2"/>
+                    <input onChange={handleToggle(c._id)} checked={findOutCategory(c._id)} type="checkbox" className="mr-2"/>
                     <label className="form-check-label">{c.name}</label>
                 </li>
             ))
@@ -92,93 +183,24 @@ const CreateBlog=({router})=>{
         return (
             tags && tags.map((t,it)=>(
                 <li className="list-unstyled" key={it}>
-                    <input onChange={handleTagsToggle(t._id)} type="checkbox" className="mr-2"/>
+                    <input  checked={findOutTag(t._id)} onChange={handleTagsToggle(t._id)} type="checkbox" className="mr-2"/>
                     <label className="form-check-label">{t.name}</label>
                 </li>
             ))
         )
     }
 
-    const [categories, setCategories] = useState([])
-    const [tags, setTags] = useState([])
-
-
-    const {error, sizeError, success, formData, title, hidePublishButton}= values
-
-    const initCategories=()=>{
-        getCategories().then(data=>{
-            if(data.error){
-                setValues({...values, error: data.error})
-            }else{
-                setCategories(data)
-            }
-        })
-
-    }
-
-    const initTags=()=>{
-        getTags().then(data=>{
-            if(data.error){
-                setValues({...values, error: data.error})
-            }else{
-                setTags(data)
-            }
-        })
-    }
-
-    useEffect(()=>{
-        setValues({...values, formData: new FormData()})
-        initCategories()
-        initTags()
-    },[router])
-
     const handleChange= name=>e=>{
         // console.log(e.target.value)
         const value= name === 'photo'? e.target.files[0] : e.target.value
         formData.set(name, value)
         setValues({...values, [name]: value, formData,})
+
     }
 
-    const publishBlog=(e)=>{
-        e.preventDefault()
-        createBlog(formData,token ).then(data=>{
-            if(data.error){
-                setValues({...values, error:data.error})
-            }else{
-                setValues({...values, title:' ', error:'', success: `"${data.title}" is created` })
-                setBody('')
-                setCategories([])
-                setTags([])
-            }
-        })
-    }
-
-    const handleBody=e=>{
-        // console.log(e)
-        // setValues({...values, success:false, error:''})
-        setBody(e)
-        formData.set('body', e)
-        if(typeof window !== undefined){
-            localStorage.setItem('blog', JSON.stringify(e))
-        }
-    }
-
-    const showError=()=>(
-        <div className="alert alert-danger" style={{display: error? '': 'none'}}>
-        {error}
-        </div>
-    )
-
-    const showSuccess=()=>(
-        <div className="alert alert-success" style={{display: success? '': 'none'}}>
-        {success}
-        </div>
-    )
-
-
-    const createBlogForm=()=>{
+    const updateBlogForm=()=>{
         return(
-            <form onSubmit={publishBlog} >
+            <form onSubmit={editBlog} >
                 <div className="form-group" >
                     <label className="text-muted">Title</label>
                     <input type="text" className="form-control" value={title} onChange={handleChange('title')}/>
@@ -187,23 +209,22 @@ const CreateBlog=({router})=>{
                     <ReactQuill modules={QuillModules} formats={QuillFormats} value={body} placeholder="Hii," onChange={handleBody}/>
                 </div>
                 <div>
-                    <button className="btn btn-primary"  type="submit">Publish</button>
+                    <button className="btn btn-primary"  type="submit">Edit</button>
                 </div>
             </form>
         )
     }
-
-
-    return  <div className="container-fluid pb-5">
-                <div className="row">
-                   <div className="col-md-8" style={{marginBottom:'100px'}} > 
-                        {showSuccess()}
-                        {createBlogForm()}
-                        <div className="pt-3">
-                            {showError()}
-                        </div>
-                    </div> 
-                    <div className="col-md-4">
+    return (
+        <div className="container-fluid pb-5">
+            <div className="row">
+                <div className="col-md-8">
+                    <p>create blog form</p>
+                    {updateBlogForm()}
+                    <div className="pt-3">
+                       
+                    </div>
+                </div>
+                <div className="col-md-4">
                         <div className='form-group pb-2'>
                             <h5>
                                 Featured Image
@@ -234,9 +255,9 @@ const CreateBlog=({router})=>{
                             </ul>
                         </div>
                     </div>
-                </div>
             </div>
-}
+        </div>
+    );
+};
 
-
-export default withRouter(CreateBlog)
+export default withRouter(BlogUpdate)
