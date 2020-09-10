@@ -271,7 +271,7 @@ exports.photo=(req,res)=>{
     Blog.findOne({slug}).select('photo').exec((err, blog)=>{
         if(err || !blog){
             return res.status(400).json({
-                error:errorHandler(err)
+                error: errorHandler(err)
             })
         }
 

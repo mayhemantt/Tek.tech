@@ -10,6 +10,7 @@ import {singleBlog, updateBlog} from '../../actions/blog'
 import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
 import {QuillModules,QuillFormats} from '../../helpers/quill'
+import {API} from '../../config'
 
 
 const BlogUpdate = ({router}) => {
@@ -103,10 +104,12 @@ const BlogUpdate = ({router}) => {
                 setValues({...values, error:data.error})
             }else{
                 setValues({...values, title:`${data.title}`, success: `Blog Title "${data.title}" has been updated`})
-                if(isAuth() && isAuth.role===1){
-                    Router.replace(`/admin/crud/${router.query.slug}`)
+               if(isAuth() && isAuth.role===1){
+                    // Router.replace(`/admin/crud/${router.query.slug}`)
+                    Router.replace('/admin')
                 }else if(isAuth() && isAuth.role===0){
-                    Router.replace(`/user/crud/${router.query.slug}`)
+                    // Router.replace(`/user/crud/${router.query.slug}`)
+                    Router.replace('/user')
                 }
             }
         })
@@ -214,14 +217,25 @@ const BlogUpdate = ({router}) => {
             </form>
         )
     }
+
+    const showSuccess=()=>{
+        return <div className="alert alert-success" style={{display: success ? '': 'none'}}>{success}</div>
+    }
+
+    const showError=()=>{
+        return <div className="alert alert-danger" style={{display: error ? '': 'none'}}>{error}</div>
+    }
+
     return (
         <div className="container-fluid pb-5">
+            {showError()}
+            {showSuccess()}
             <div className="row">
+                <img src={`${API}/blog/photo/${router.query.slug}`} alt={title}/>
                 <div className="col-md-8">
                     <p>create blog form</p>
                     {updateBlogForm()}
                     <div className="pt-3">
-                       
                     </div>
                 </div>
                 <div className="col-md-4">
