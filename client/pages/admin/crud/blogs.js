@@ -1,9 +1,9 @@
 import Layout from '../../../components/Layout'
 import Link from 'next/link'
 import Admin from '../../../components/auth/Admin'
-import BlogRead from '../../../components/crud/BlogCreate'
+import ReadBlogs from '../../../components/crud/BlogRead'
 
-const Blog=()=>{
+const Blogs=()=>{
     return(
         <Layout>
             <Admin>
@@ -11,12 +11,11 @@ const Blog=()=>{
                     <div className="row">
                         <div className="col-md-12 pt-5 pb-5" style={{textAlign:"center"}}>
                             <h2>
-                                Category A New Blog
+                                Manage Blogs 
                             </h2>
                         </div>
                         <div className="col-md-12">
-                            <h3 style={{textAlign:"center"}}>Blog</h3>
-                           <BlogRead />
+                            <ReadBlogs />
                         </div>
                     </div>
                 </div>
@@ -25,4 +24,4 @@ const Blog=()=>{
     )
 }
 
-export default Blog
+export default Blogs
