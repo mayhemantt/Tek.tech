@@ -102,7 +102,7 @@ const BlogUpdate = ({router}) => {
             if(data.error){
                 setValues({...values, error:data.error})
             }else{
-                setValues({...values, title: '', success: `Blog Title "${data.title}" has been updated`})
+                setValues({...values, title:`${data.title}`, success: `Blog Title "${data.title}" has been updated`})
                 if(isAuth() && isAuth.role===1){
                     Router.replace(`/admin/crud/${router.query.slug}`)
                 }else if(isAuth() && isAuth.role===0){
