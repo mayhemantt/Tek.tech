@@ -1,9 +1,8 @@
 import Layout from '../../../components/Layout'
-import Link from 'next/link'
 import Admin from '../../../components/auth/Admin'
 import BlogUpdate from '../../../components/crud/BlogUpdate'
 
-const Blog=()=>{
+const UpdateBlog=()=>{
     return(
         <Layout>
             <Admin>
@@ -25,4 +24,4 @@ const Blog=()=>{
     )
 }
 
-export default Blog
+export default UpdateBlog

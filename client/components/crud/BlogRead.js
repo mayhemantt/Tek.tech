@@ -4,6 +4,7 @@ import Router from 'next/router'
 import {getCookie, isAuth} from '../../actions/auth'
 import {list, removeBlog} from '../../actions/blog'
 import moment from 'moment'
+
 export default function BlogRead(){
 
     const [blogs, setBlogs]= useState([])
@@ -50,10 +51,9 @@ export default function BlogRead(){
             );
         }else if (isAuth() && isAuth().role === 1) {
             return (
-                // console.log('Admin')
                 <Link href={`/admin/crud/${blog.slug}`}>
-                    <a className="ml-2 btn btn-sm btn-warning">Update</a>
-                </Link>
+                    <a  className="ml-2 btn btn-sm btn-warning">Update</a>
+                    </Link>
             );
         }
     };

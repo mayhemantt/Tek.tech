@@ -41,6 +41,8 @@ const BlogUpdate = ({ router }) => {
         initTags();
     }, [router]);
 
+    
+
     const initBlog = () => {
         if (router.query.slug) {
             singleBlog(router.query.slug).then(data => {
