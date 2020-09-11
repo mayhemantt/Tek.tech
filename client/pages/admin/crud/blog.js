@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Admin from '../../../components/auth/Admin'
 import BlogRead from '../../../components/crud/BlogCreate'
 
-const NewBlog=()=>{
+const Blog=()=>{
     return(
         <Layout>
             <Admin>
@@ -25,4 +25,4 @@ const NewBlog=()=>{
     )
 }
 
-export default NewBlog
+export default Blog

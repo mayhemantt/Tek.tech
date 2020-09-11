@@ -7,7 +7,7 @@ import {getCookie, isAuth} from '../../actions/auth'
 import {getCategories } from '../../actions/category'
 import {getTags } from '../../actions/tags'
 import {singleBlog, updateBlog} from '../../actions/blog'
-import '../../node_modules/react-quill/dist/quill.snow.css'
+// import '../../node_modules/react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(()=> import('react-quill'), {ssr: false})
 import {QuillModules,QuillFormats} from '../../helpers/quill'
 import {API} from '../../config'
