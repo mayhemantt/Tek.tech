@@ -1,6 +1,6 @@
 import getConfig from 'next/config'
 
-const {publicRuntimeConfig}= getConfig()
+const {publicRuntimeConfig}=getConfig()
 
 export const API= publicRuntimeConfig.PRODUCTION ? 'https://blog.com' :'http://localhost:8000/api'
 

@@ -36,7 +36,7 @@ const tagRoutes= require('./routes/tag')
 const app=express()
  
 // db
-mongoose.connect(process.env.DATABASE,{
+mongoose.connect(process.env.DATABASE_LOCAL,{
     useNewUrlParser: true,
     useCreateIndex:true,
     useUnifiedTopology: true,
