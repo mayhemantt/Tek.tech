@@ -18,6 +18,8 @@ import {APP_NAME} from '../config'
 import Link from 'next/link'
 import {signout, isAuth} from '../actions/auth'
 import NProgress from 'nprogress'
+import Search from './blog/Search'
+
 
 Router.onRouteChangeStart=url=> NProgress.start()
 Router.onRouterChangeComplete= url => NProgress.done()
@@ -29,7 +31,7 @@ const Header = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div>
+    <React.Fragment>
       <Navbar color="light" light expand="md">
         <Link href="/">
            <NavLink className="font-weight-bold">{APP_NAME}</NavLink>
@@ -43,8 +45,8 @@ const Header = () => {
                 <Link href="/blogs">
                 <NavLink style={{cursor:'pointer'}}>Blogs</NavLink>
                 </Link>
-            </NavItem>
-              </React.Fragment>
+              </NavItem>
+            </React.Fragment>
             {!isAuth()&& <React.Fragment>
               <NavItem>
                 <Link href="/signin">
@@ -56,42 +58,27 @@ const Header = () => {
                 <NavLink style={{cursor:'pointer'}}>Signup</NavLink>
                 </Link>
             </NavItem>
-              </React.Fragment>
-            }
-            
-            {
-            isAuth() && isAuth().role===0 &&(
+              </React.Fragment>}
+            {isAuth() && isAuth().role===0 &&(
               <NavItem>
                 <Link href="/user">  
               <NavLink style={{cursor:'pointer'}} >
                 {`${isAuth().name}`}
               </NavLink>
               </Link>
-              </NavItem>
-            )
-            }
-
-{
-            isAuth() && isAuth().role===1 && (
+              </NavItem>)}
+            {isAuth() && isAuth().role===1 && (
               <NavItem>
                 <Link href="/admin">  
               <NavLink style={{cursor:'pointer'}} >
                 {`${isAuth().name}`}
               </NavLink>
               </Link>
-              </NavItem>
-            )
-            }
-
-{
-            isAuth() && (
+              </NavItem>) }
+            { isAuth() && (
               <NavItem>
               <NavLink style={{cursor:'pointer'}} onClick={()=>signout(()=> Router.replace(`/signin`))}>Signout</NavLink>
-              </NavItem>
-            )
-            }
-
-
+              </NavItem>)}
             </Nav>
           {/* <NavbarText>
             <Link href="/about">
@@ -100,7 +87,8 @@ const Header = () => {
           </NavbarText> */}
         </Collapse>
       </Navbar>
-    </div>
+      <Search />
+    </React.Fragment>
   );
 }
 
