@@ -76,7 +76,7 @@ const Blogs=({blogs, categories, tags, totalBlogs, blogsLimit, blogSkip, router}
 
     const showAllTags=()=>{
         return tags.map((t,i)=>(
-            <Link href={`/categories/${t.slug}`} key={i}>
+            <Link href={`/tags/${t.slug}`} key={i}>
                 <a className="btn btn-outline-primary mr-1 mt-3">
                     {t.name}
                 </a>
