@@ -8,8 +8,6 @@ const _ = require('lodash');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const fs = require('fs');
 const {smartTrim}= require('../helpers/blog');
-const { identity } = require('lodash');
-
 
 exports.create = (req, res) => {
     let form = new formidable.IncomingForm();
@@ -129,7 +127,7 @@ exports.listAllBlogsCategoriesTags=(req,res)=>{
     Blog.find({})
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
-        .populate('postedBy', '_id name profile')
+        .populate('postedBy', '_id name profile username')
         .sort({createdAt: -1})
         .skip(skip)
         .limit(limit)
@@ -287,7 +285,7 @@ exports.listRelated =(req,res)=>{
 
     Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
     .limit (limit)
-    .populate('postedBy', '_id name profile')
+    .populate('postedBy', '_id name profile username')
     .select('title slug excerpt postedBy createdAt updatedAt')
     .exec((err, blogs)=>{
         if(err){
