@@ -79,7 +79,22 @@ const Header = () => {
               <NavItem>
               <NavLink style={{cursor:'pointer'}} onClick={()=>signout(()=> Router.replace(`/signin`))}>Signout</NavLink>
               </NavItem>)}
-            </Nav>
+
+              {isAuth() && isAuth().role===1 && (
+              <NavItem>
+                <Link href="/admin/crud/blog">  
+              <NavLink style={{cursor:'pointer'}} >
+                Create Blog
+              </NavLink>
+              </Link>
+              </NavItem>) }
+              { isAuth() && isAuth().role === 0 &&(
+              <NavItem>
+                <Link href="/user/crud/create">
+                <NavLink className="btn btn-primary text-light" style={{cursor:'pointer'}}>Write a blog</NavLink>
+                </Link>
+              </NavItem>)}
+          </Nav>
           {/* <NavbarText>
             <Link href="/about">
               <a>About</a>

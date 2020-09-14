@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import {useState, useEffect} from 'react'
 import Router from 'next/router'
-import {getCookie, isAuth} from '../../actions/auth'
+import {getCookie, isAuth, updateUser} from '../../actions/auth'
 import {getProfile, update} from '../../actions/user'
 import {API} from '../../config'
+
 export default function ProfileUpdate(){
     
     const [values, setValues]=useState({
@@ -49,13 +50,16 @@ export default function ProfileUpdate(){
             if(data.error){
                 setValues({...values, error: data.error, success: false,loading:false})
             }else{
-                setValues({
-                username:data.username,
-                name:data.name,
-                email:data.email,
-                success:true,
-                loading:false,
-                about:''})
+                updateUser(data, ()=>{
+                    setValues({
+                        username:data.username,
+                        name:data.name,
+                        email:data.email,
+                        success:true,
+                        loading:false,
+                        about:''})
+                })
+                
             }
         })
     }
@@ -121,6 +125,7 @@ export default function ProfileUpdate(){
                         className="img img-fluid mb-3"
                         style={{maxHeight: 'auto', maxWidth:'100%'}}
                         alt="user profile" /> */}
+                        img
                     </div>
                     <div className="col-md-8">
                         {profileUpdateForm()}

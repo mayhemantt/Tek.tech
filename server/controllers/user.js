@@ -77,10 +77,12 @@ exports.update = (req, res) => {
         user.save((err, result) => {
             if (err) {
                 return res.status(400).json({
-                    error: 'All filds required'
+                    error: 'All fields required'
                 });
             }
             user.hashed_password = undefined;
+            user.salt =undefined
+            user.photo= undefined
             res.json(user);
         });
     });
