@@ -7,6 +7,8 @@ import {API, DOMAIN, APP_NAME} from '../../config'
 import moment from 'moment'
 import renderHTML from 'react-render-html'
 import SmallCard from '../../components/blog/SmallCard'
+import DisqusThread from '../../components/DisqusThread'
+
 
 const SingleBlog=({blog, query})=>{
 
@@ -57,7 +59,7 @@ const SingleBlog=({blog, query})=>{
     ))
 
 
-    const showBlogTags=blog=>
+    const showBlogTags=blog=>{
         blog.categories.map((t,i)=>(
             <Link key={i} href={`/tags/${t.slug}`}>
                 <a className="btn btn-outline-primary mr-1 ml-1 mt-3">
@@ -65,16 +67,25 @@ const SingleBlog=({blog, query})=>{
                 </a>
             </Link>
         ));
+    }
 
-        const showRelatedBlog=()=>{
-            return related.map((blog,i)=>{
-                return <div className="col-md-4" key={i}>
-                    <article>
-                        <SmallCard blog={blog}/>
-                    </article>
-                </div>
-            })
-        }
+    const showRelatedBlog=()=>{
+        return related.map((blog,i)=>{
+            return <div className="col-md-4" key={i}>
+                <article>
+                    <SmallCard blog={blog}/>
+                </article>
+            </div>
+        })
+    }
+
+    const showComments =()=>{
+        return (
+            <div>
+                <DisqusThread id={blog._id} title={blog.title}  path={`/blogs/${blog.slug}`}/>
+            </div>
+        )
+    }
 
     return <React.Fragment>
         {head()}
@@ -123,7 +134,7 @@ const SingleBlog=({blog, query})=>{
 
                     <div className="container pb-5">
                         <h4 className="text-center pt-5 pb-5 h2">
-                            Comments 
+                            {showComments()}
                         </h4>
                         <hr />
                     </div>
