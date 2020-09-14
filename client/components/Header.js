@@ -83,7 +83,7 @@ const Header = () => {
               {isAuth() && isAuth().role===1 && (
               <NavItem>
                 <Link href="/admin/crud/blog">  
-              <NavLink style={{cursor:'pointer'}} >
+              <NavLink className="btn btn-primary text-light"  style={{cursor:'pointer'}} >
                 Create Blog
               </NavLink>
               </Link>

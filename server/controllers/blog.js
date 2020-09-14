@@ -339,24 +339,3 @@ exports.listByUser=(req,res)=>{
             })
     })
 }
-
-exports.canUpdateDeleteBlog=(req,res, next)=>{
-    const slug= req.params.slug.toLowerCase()
-    Blog.findOne({slug}).exec((err, data)=>{
-        if(err){
-            return res.status(400).json({
-                error : errorHandler(err)
-            })
-        }
-
-        let authorizedUser= data.postedBy._id.toString()===req.profile._id.toString()
-        if(!authorizedUser){{
-            if(err){
-                return res.status(400).json({
-                    error : 'Not Authorized User'
-                })
-            }
-        }}
-        next()
-    })
-}

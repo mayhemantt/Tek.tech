@@ -5,7 +5,7 @@ import {getCookie, isAuth} from '../../actions/auth'
 import {list, removeBlog} from '../../actions/blog'
 import moment from 'moment'
 
-export default function BlogRead(){
+export default function BlogRead({username}){
 
     const [blogs, setBlogs]= useState([])
     const [message, setMessage]= useState([])
@@ -16,13 +16,16 @@ export default function BlogRead(){
     },[])
 
     const loadBlogs=()=>{
-        list().then(data=>{
+        list(username).then(data=>{
             if(data.error){
                 console.log(data.error)
             }else{
                 setBlogs(data)
             }
-        })}
+        })
+    }
+
+    
     const deleteBlog=(slug)=>{
         removeBlog(slug, token).then(data=>{
             if(data.error){
@@ -46,7 +49,7 @@ export default function BlogRead(){
             return (
                 // console.log('User')
                 <Link href={`/user/crud/${blog.slug}`}>
-                    <a className="btn btn-sm btn-warning">Update</a>
+                    <a className="ml-2 btn btn-sm btn-warning">Update</a>
                 </Link>
             );
         }else if (isAuth() && isAuth().role === 1) {
@@ -65,7 +68,7 @@ export default function BlogRead(){
                 <div key={i} className="pb-5">
                     <h3>{blog.title}</h3>
                     <p className="mark">Written By {blog.postedBy.name} | Published On {moment(blog.updatedAt).fromNow()}</p>
-                    <button onClick={()=> deleteConfirm(blog.slug, blog.title)} className="btn btn-sm btn-danger">Delete</button>
+                    <button onClick={()=> deleteConfirm(blog.slug, blog.title)} className="btn btn-sm btn-danger p-2">Delete</button>
                     {showUpdateButton(blog)}
                 </div>
             )
