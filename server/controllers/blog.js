@@ -8,7 +8,7 @@ const _ = require('lodash');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 const fs = require('fs');
 const {smartTrim}= require('../helpers/blog');
-
+const User = require('../models/user')
 exports.create = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -313,4 +313,50 @@ exports.listSearch=(req,res)=>{
             res.json(blogs)
         }).select('-photo -body')
     }
+}
+
+exports.listByUser=(req,res)=>{
+    User.findOne({username: req.params.username}).exec((err, user)=>{
+        if(err){
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
+        }
+
+        let userId = user._id;
+        Blog.find({postedBy: userId})
+            .populate('categories', "_id name slug")
+            .populate('tags', '_id name slug')
+            .populate('postedBy','_id name username')
+            .select('_d title slug postedBy createdAt updatedAt')
+            .exec((err, data)=>{
+                if(err){
+                    return res.status(400).json({
+                        error: errorHandler(err)
+                    })
+                }
+                res.send(data)
+            })
+    })
+}
+
+exports.canUpdateDeleteBlog=(req,res, next)=>{
+    const slug= req.params.slug.toLowerCase()
+    Blog.findOne({slug}).exec((err, data)=>{
+        if(err){
+            return res.status(400).json({
+                error : errorHandler(err)
+            })
+        }
+
+        let authorizedUser= data.postedBy._id.toString()===req.profile._id.toString()
+        if(!authorizedUser){{
+            if(err){
+                return res.status(400).json({
+                    error : 'Not Authorized User'
+                })
+            }
+        }}
+        next()
+    })
 }
