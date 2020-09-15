@@ -4,7 +4,8 @@ import Layout from '../../components/Layout'
 import {userPublicProfile} from '../../actions/user'
 import {API, DOMAIN, APP_NAME} from '../../config'
 import moment from 'moment'
-
+import contactForm from '../../components/form/ContactForm'
+import ContactForm from '../../components/form/ContactForm'
 const UserProfile=({user, blogs, query})=>{
 
 
@@ -79,7 +80,7 @@ const UserProfile=({user, blogs, query})=>{
                             <div className="card">
                                 <div className="card-body">
                                     <h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 test-light">Message {user.name}</h5>
-                                    <p>contact Form</p>
+                                    <ContactForm authorEmail={user.email}/>
                                 </div>
                             </div>
                         </div>

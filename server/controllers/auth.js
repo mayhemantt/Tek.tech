@@ -3,6 +3,10 @@ const shortId =require('shortid')
 const jwt= require('jsonwebtoken')
 const expressJwt=require('express-jwt')
 const Blog =require('../models/blog')
+// sendgrid
+const sgMail =require('@sendgrid/mail') //SENDGRID_API_KEY
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 
 exports.signup=(req,res)=>{
     User.findOne({email:req.body.email}).exec((err, user)=>{
@@ -131,4 +135,33 @@ exports.canUpdateDeleteBlog=(req,res, next)=>{
         }}
         next()
     })
+}
+
+exports.forgotPassword=(req,res)=>{
+    const {email} = req.body 
+    User.findOne({email},(err, user)=>{
+        if(err || !user){
+            return res.status(401).json({
+                error :'User with that email does not exist'
+            })
+        }
+        const token = jwt.sign({_id:user._id}, process.env.JWT_RESET_PASSWORD,{expiresIn: '10m'})
+        
+        // email
+        const emailData = {
+            from: process.env.EMAIL_TO,
+            to: email,
+            subject: `Reset Password Link`,
+            html: `
+                <h4> Reset Link </h4>
+                <p>${process.env.CLIENT_URL}/auth/password/reset/${token}< /p>
+            `
+        };
+
+        //populate db with user reset link...
+    }) 
+}
+
+exports.resetPassword= (req,res)=>{
+
 }
