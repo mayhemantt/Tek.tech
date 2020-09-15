@@ -159,6 +159,23 @@ exports.forgotPassword=(req,res)=>{
         };
 
         //populate db with user reset link...
+
+        return user.updateOne({resetPasswordLink: token},(err, success)=>{
+            if(err){
+                return res.json({error: errorHandler(err)})
+            }else{
+                sgMail.send(emailData, (err, success)=>{
+                    if(err){
+                        return res.status(400).json({
+                            error: `Error Generating Mail to ${email}`
+                        })
+                    }
+                    res.status(200).json({
+                        success: `Email Sent with Reset link to ${email}`
+                    })
+                })
+            }
+        })
     }) 
 }
 
