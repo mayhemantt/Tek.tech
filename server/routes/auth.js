@@ -13,6 +13,6 @@ router.post('/signup',userSignupValidator,runValidation, signup)
 router.post('/signin',userSigninValidator,runValidation, signin)
 router.get('/signout', signout)
 router.put('/forgot-password', forgotPasswordValidator, runValidation, forgotPassword)
-router.put('/forgot-password', resetPasswordValidator, runValidation, resetPassword)
+router.put('/reset', resetPasswordValidator, runValidation, resetPassword)
 
 module.exports= router
