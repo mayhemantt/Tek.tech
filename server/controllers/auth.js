@@ -145,7 +145,7 @@ exports.forgotPassword=(req,res)=>{
                 error :'User with that email does not exist'
             })
         }
-        const token = jwt.sign({_id:user._id}, process.env.JWT_RESET_PASSWORD,{expiresIn: '6d'})
+        const token = jwt.sign({_id:user._id}, process.env.JWT_RESET_PASSWORD,{expiresIn: '2m'})
         
         // email
         const emailData = {
@@ -154,7 +154,7 @@ exports.forgotPassword=(req,res)=>{
             subject: `Reset Password Link`,
             html: `
                 <h4> Reset Link </h4>
-                <p>${process.env.CLIENT_URL}/auth/password/reset/${token}< /p>
+                <p>${process.env.CLIENT_URL}/auth/${token}< /p>
             `
         };
 
@@ -171,7 +171,7 @@ exports.forgotPassword=(req,res)=>{
                         })
                     }
                     res.status(200).json({
-                        success: `Email Sent with Reset link to ${email}`
+                        message: `Email Sent with Reset link to ${email}`
                     })
                 })
             }

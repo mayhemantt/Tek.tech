@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {signin, authenticate, isAuth} from '../../actions/auth'
 import Router from 'next/router'
 import {useEffect} from 'react'
-
+import Link from 'next/link'
 const SigninComponent=()=>{
 
     const [values, setValues]=useState({
@@ -80,6 +80,10 @@ const SigninComponent=()=>{
             {showLoading()}
             {showMessage()}
             {showForm && signinForm()}
+            <br />
+            <Link href="/auth/forgot">
+                <a  className="btn btn-outline-primary">Forgot Password?</a>
+            </Link>
         </React.Fragment>
     )
 }
