@@ -14,7 +14,6 @@ const Reset=({router})=>{
     })
 
     const {name, newPassword, message, error, showForm}= values
-console.log(router.query.id)
     const handleSubmit =e=>{
         e.preventDefault()
         resetPassword({ 

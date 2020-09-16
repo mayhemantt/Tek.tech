@@ -7,32 +7,105 @@ const Blog =require('../models/blog')
 const sgMail =require('@sendgrid/mail') //SENDGRID_API_KEY
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 const _ = require('lodash')
+const {OAuth2Client}= require('google-auth-library')
 
-exports.signup=(req,res)=>{
-    User.findOne({email:req.body.email}).exec((err, user)=>{
+
+exports.preSignup=(req,res)=>{
+    const {name, email, password}= req.body
+    User.findOne({email: email.toLowerCase()},(err, user)=>{
         if(user){
             return res.status(400).json({
                 error: 'Email is Taken'
             })
         }
 
-        const {name,email,password}=req.body
-        let username = shortId.generate()
+        const token= jwt.sign({name, email, password},process.env.JWT_ACCOUNT_ACTIVATION,{expiresIn:'10m'})
+        const emailData = {
+            from: process.env.EMAIL_TO,
+            to: email,
+            subject: `Activation Link`,
+            html: `
+                <h4> Reset Link </h4>
+                <p>${process.env.CLIENT_URL}/auth/activate/${token} </p>
+            `
+        };
 
-        let profile=`${process.env.CLIENT_URL}/profile/${username}`
-
-        let newUser=new User({name, email,password, profile,username})
-        newUser.save((err, success)=>{
+        sgMail.send(emailData, (err, success)=>{
             if(err){
                 return res.status(400).json({
-                    error: err
+                    error: `Error Generating Mail to ${email}`
                 })
-           }
-            res.json({
-                message: 'Signup Success! Please Signin.'
+            }
+            res.status(200).json({
+                message: `Email Sent with Reset link to ${email}`
             })
         })
     })
+
+}
+
+
+// exports.signup=(req,res)=>{
+//     User.findOne({email:req.body.email}).exec((err, user)=>{
+//         if(user){
+//             return res.status(400).json({
+//                 error: 'Email is Taken'
+//             })
+//         }
+//         const {name,email,password}=req.body
+//         let username = shortId.generate()
+
+//         let profile=`${process.env.CLIENT_URL}/profile/${username}`
+
+//         let newUser=new User({name, email,password, profile,username})
+//         newUser.save((err, success)=>{
+//             if(err){
+//                 return res.status(400).json({
+//                     error: err
+//                 })
+//            }
+//             res.json({
+//                 message: 'Signup Success! Please Signin.'
+//             })
+//         })
+//     })
+// }
+
+exports.signup=(req,res)=>{
+    const token = req.body.token 
+    if(token){
+        jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, function(err, decoded){
+            if(err){
+                return res.status(401).json({
+                    error: 'Expired Link'
+                })
+            }
+
+            const {name, email, password}= jwt.decode(token)
+
+            let username = shortId.generate()
+            let profile=`${process.env.CLIENT_URL}/profile/${username}`
+
+            const user= new User({name, email, password, profile, username})
+            user.save((err, user)=>{
+               if(err){
+                return res.status(401).json({
+                    error: errorHandler(err)
+                })
+               }
+
+               return res.json({
+                   message: 'Signup Success!'
+               })
+            })
+
+
+        })
+    }else{
+        return res.json(400).json({
+            message: 'Something went wrong,  please try again'
+        })
+    }
 }
 
 exports.signin=(req,res)=>{
@@ -145,7 +218,7 @@ exports.forgotPassword=(req,res)=>{
                 error :'User with that email does not exist'
             })
         }
-        const token = jwt.sign({_id:user._id}, process.env.JWT_RESET_PASSWORD,{expiresIn: '2m'})
+        const token = jwt.sign({_id:user._id}, process.env.JWT_RESET_PASSWORD,{expiresIn: '90s'})
         
         // email
         const emailData = {
@@ -216,3 +289,43 @@ exports.resetPassword= (req,res)=>{
         })
     }
 }
+
+const client =new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+exports.googleLogin = (req, res) => {
+    const idToken = req.body.tokenId;
+    client.verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID }).then(response => {
+        // console.log(response)
+        const { email_verified, name, email, jti } = response.payload;
+        if (email_verified) {
+            User.findOne({ email }).exec((err, user) => {
+                if (user) {
+                    // console.log(user)
+                    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+                    res.cookie('token', token, { expiresIn: '1d' });
+                    const { _id, email, name, role, username } = user;
+                    return res.json({ token, user: { _id, email, name, role, username } });
+                } else {
+                    let username = shortId.generate();
+                    let profile = `${process.env.CLIENT_URL}/profile/${username}`;
+                    let password = jti;
+                    user = new User({ name, email, profile, username, password });
+                    user.save((err, data) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: errorHandler(err)
+                            });
+                        }
+                        const token = jwt.sign({ _id: data._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+                        res.cookie('token', token, { expiresIn: '1d' });
+                        const { _id, email, name, role, username } = data;
+                        return res.json({ token, user: { _id, email, name, role, username } });
+                    });
+                }
+            });
+        } else {
+            return res.status(400).json({
+                error: 'Google login failed. Try again.'
+            });
+        }
+    });
+};

@@ -16,10 +16,22 @@ const Index=()=>{
     return(
         <Layout>
             {head()}
-            <h2 className="text-center">Index page</h2>
-            <h4>Lorem, ipsum.</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo quae modi quasi sed saepe deserunt quas sapiente, dicta suscipit accusantium consequatur ipsam eveniet porro earum dolorum tempore sint similique voluptatibus repellat? Aut accusamus minima eveniet tempore dolores asperiores modi ratione eaque natus officiis, quasi quia labore dignissimos reprehenderit rem dicta quae ea unde ad, sint non id doloremque similique. Alias sapiente perferendis blanditiis magnam corrupti harum, adipisci quasi! Eaque incidunt earum provident qui voluptate quaerat perferendis, itaque voluptatibus ducimus quisquam neque, laboriosam nostrum ab adipisci sequi temporibus. Delectus, repudiandae deleniti aliquid ipsum quod tenetur corrupti molestiae error eaque, beatae, voluptatibus qui voluptas inventore eligendi nostrum et. Nisi ad autem minus quos quia, non esse assumenda vero necessitatibus odio animi fugit dolores optio obcaecati cumque laudantium itaque dolore! Id iste quidem necessitatibus, voluptates harum voluptate ipsum odio libero facilis et numquam ea cupiditate impedit, error veniam reiciendis nesciunt beatae. Quo incidunt, nemo dolore similique earum, error vitae aliquid cum dolor sunt labore quos assumenda unde eligendi recusandae culpa repellat omnis laboriosam velit architecto neque id suscipit harum. Quas rem ipsam mollitia libero corrupti quam illo, a excepturi. Maiores illo aliquam sint. Molestias eum excepturi libero quis illum amet magnam molestiae accusamus.</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea laudantium doloribus porro eum illum nesciunt ducimus provident accusantium eaque aliquid, qui perferendis veniam voluptate enim quis dicta, modi itaque laboriosam.</p>
+            <div className="container mb-4">
+                <h1 className="text-center mb-4">Index page</h1>
+                <h4>Lorem, ipsum.</h4>
+                <div className="row mb-2">
+                    <div className="col-md-4 mr-2">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime quae tempora esse nisi! Voluptates ullam fuga, veniam mollitia nobis praesentium natus nulla iure quod cum? Minima laudantium sit eos. Temporibus est natus eligendi, beatae sapiente quia numquam maiores labore distinctio. Molestias odit optio nostrum animi rem porro illo ipsa enim, similique numquam quidem aut, vitae, voluptatum quibusdam! Omnis, neque? Nobis, nesciunt! Recusandae saepe iure labore aspernatur suscipit eius porro corporis dolores! Unde eius sit quisquam aperiam. Quis obcaecati perferendis exercitationem quia. Incidunt saepe, ratione eveniet magni ipsa libero, inventore perspiciatis minima laudantium blanditiis unde laborum corrupti ea hic quibusdam quis assumenda provident eius voluptatum voluptate? Perferendis cumque assumenda accusamus libero, ea excepturi deleniti blanditiis ex quasi vero alias. Error harum, voluptas saepe blanditiis inventore optio id quas consectetur laudantium nulla tempore? Sed, quia quod! Ea impedit nemo deleniti modi corporis totam maxime doloremque, aspernatur quisquam vero corrupti, nostrum itaque? Iusto voluptates eius labore necessitatibus perferendis vitae esse voluptate dignissimos maxime cupiditate obcaecati, optio, dolorem quasi veniam eligendi facilis magnam quisquam non quibusdam nam vero exercitationem ipsa doloremque recusandae? Magnam ipsam deleniti nulla facilis fugit delectus sit repudiandae temporibus, earum doloremque sint, dicta, facere deserunt beatae repellat. Voluptate veritatis beatae dolor.
+                        </p>
+                    </div>
+                    <div className="col-md-6">
+                        <h5>
+                            eos commodi necessitatibus. At ut debitis qui, cupiditate dolorem architecto officiis magnam repellendus molestias, numquam blanditiis saepe provident quas aspernatur voluptate eveniet veniam recusandae laborum voluptatem earum.
+                        </h5>
+                    </div>
+                </div>
+            </div>
         </Layout>
     )
 }
