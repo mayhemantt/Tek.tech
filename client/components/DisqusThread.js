@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types';
 
 import {DISQUS_SHORTNAME, DOMAIN} from '../config'
